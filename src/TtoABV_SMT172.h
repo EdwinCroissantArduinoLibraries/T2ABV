@@ -24,28 +24,28 @@ Code by Edwin Croissant date 03dec15. */
 #define T2ABV_SMT172
 #include <avr/pgmspace.h>
 
-//float h2oBoilingPoint(float p) {
-//	// calculate the the boiling temperature of water for the measured pressure in Celsius
-//	float H2OInKelvin = -20330000 * 373.15
-//			/ (4157 * log(p / 1013.25) * 373.15 - 20330000);
-//	return H2OInKelvin - 273.15;
-//}
-//
-//float azeotrope(float p) {
-//	// Calculate the the azeotrope for the measured pressure in Celsius
-//	float AzeotropeInKelvin = -19280000 * 351.324
-//			/ (4157 * log(p / 1013.25) * 351.324 - 19280000);
-//	return AzeotropeInKelvin - 273.15;
-//}
-//
-//
-//float correctedH2O(float T, float P) {
-//	return T + 100 - h2oBoilingPoint(P);
-//}
-//
-//float correctedAzeo(float T, float P) {
-//	return T + 78.174 - azeotrope(P);
-//}
+float h2oBoilingPoint(float p) {
+	// calculate the the boiling temperature of water for the measured pressure in Celsius
+	float H2OInKelvin = -20330000 * 373.15
+			/ (4157 * log(p / 1013.25) * 373.15 - 20330000);
+	return H2OInKelvin - 273.15;
+}
+
+float azeotrope(float p) {
+	// Calculate the the azeotrope for the measured pressure in Celsius
+	float AzeotropeInKelvin = -19280000 * 351.324
+			/ (4157 * log(p / 1013.25) * 351.324 - 19280000);
+	return AzeotropeInKelvin - 273.15;
+}
+
+
+float correctedH2O(float T, float P) {
+	return T + 100 - h2oBoilingPoint(P);
+}
+
+float correctedAzeo(float T, float P) {
+	return T + 78.174 - azeotrope(P);
+}
 
 float TtoLiquidABV(float T) {
 	const static uint8_t ABV[] PROGMEM = {
@@ -169,7 +169,7 @@ float TtoLiquidABV(float T) {
 
 	if (IndexABV < 0) return IndexABV; // Below azeotope
 	if (IndexABV >= int16_t(sizeof ABV / sizeof *ABV)) return 0; // Above 100 �C
-	if (IndexABV < 180) return float(pgm_read_byte(ABV + IndexABV) + 768) / 10;
+	if (IndexABV < 180) return float(pgm_read_byte(ABV + IndexABV) + 768) / 10;	//TODO pgm_read_byte(&ABV[IndexABV])
 	if (IndexABV < 460)	return float(pgm_read_byte(ABV + IndexABV) + 512) / 10;
 	if (IndexABV < 863)	return float(pgm_read_byte(ABV + IndexABV) + 256) / 10;
 	return float(pgm_read_byte(ABV + IndexABV)) / 10;

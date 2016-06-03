@@ -85,7 +85,7 @@ float DCtoLiquidABV(int16_t TinDC) {
 
 	if (IndexABV < 0) return IndexABV; // Below azeotope
 	if (IndexABV >= int16_t(sizeof ABV / sizeof *ABV)) return 0; // Above 100 °C
-	if (IndexABV < 29) return float(pgm_read_byte(ABV + IndexABV) + 768) / 10;
+	if (IndexABV < 29) return float(pgm_read_byte(ABV + IndexABV) + 768) / 10; //TODO pgm_read_byte(&ABV[IndexABV])
 	if (IndexABV < 74) return float(pgm_read_byte(ABV + IndexABV) + 512) / 10;
 	if (IndexABV < 138) return float(pgm_read_byte(ABV + IndexABV) + 256) / 10;
 	return float(pgm_read_byte(ABV + IndexABV)) / 10;
